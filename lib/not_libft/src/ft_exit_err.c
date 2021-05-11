@@ -1,4 +1,4 @@
-#include "libft.h"
+#include "not_libft.h"
 #include <stdlib.h>
 
 void	ft_exit_err(const char *msg)

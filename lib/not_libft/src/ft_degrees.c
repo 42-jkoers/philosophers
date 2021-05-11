@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "not_libft.h"
 
 double	ft_degrees(double radians)
 {

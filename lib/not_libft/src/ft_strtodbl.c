@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "not_libft.h"
 #include <stdbool.h>
 
 static bool	skip_nondigit(char **str)

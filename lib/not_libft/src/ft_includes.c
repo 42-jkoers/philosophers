@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "not_libft.h"
 #include <stdbool.h>
 
 bool	ft_includes(const char *str, char c)

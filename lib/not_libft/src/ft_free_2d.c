@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "not_libft.h"
 #include <stdlib.h>
 
 void	ft_free_2d(void **arr, size_t length)

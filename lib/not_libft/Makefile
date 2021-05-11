@@ -10,7 +10,7 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME      		= libft
+NAME      		= not_libft
 
 CC          	= gcc
 CFLAGS      	= -Wall -Wextra -Werror -Wuninitialized
@@ -21,7 +21,7 @@ HEADERDIR		= include
 OBJEXT      	= o
 BUILDDIR    	= obj
 BINDIR			= bin
-HEADER			= include/libft.h include/internal.h
+HEADER			= include/not_libft.h include/internal.h
 
 TESTNAME		= testor
 UNITTEST		= test/test_ft_split_file.c

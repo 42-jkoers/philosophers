@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "not_libft.h"
 #include <stddef.h>
 
 void	ft_strset(char *str, char c, size_t n)

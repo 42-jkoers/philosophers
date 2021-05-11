@@ -1,4 +1,4 @@
-#include "libft.h"
+#include "not_libft.h"
 
 // @return
 // ""						false

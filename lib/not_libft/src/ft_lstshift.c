@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "not_libft.h"
 #include <stdlib.h>
 
 void	ft_lstshift(t_list **lst, void (*del)(void*))
