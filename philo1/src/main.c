@@ -43,61 +43,13 @@ bool	init_globals(t_globals *g, t_input input)
 		g->forks[i] = AVAILABLE;
 		i++;
 	}
-	if (pthread_mutex_init(&g->forks_lock, NULL))
-		return (exit_error("Create mutex lock failed"));
-	if (pthread_mutex_init(&g->print_lock, NULL))
+	if (pthread_mutex_init(&g->lock, NULL))
 		return (exit_error("Create mutex lock failed"));
 	g->n = input.n;
+	g->casualty = false;
 	return (true);
 }
 
-bool	start_ph(t_ph *ph, size_t id, t_input input, t_globals *g)
-{
-	ph->id = id;
-	ph->last_meal = epoch_useconds();
-	if (ph->id == 0)
-		ph->left_fork = input.n - 1;
-	else
-		ph->left_fork = ph->id - 1;
-	ph->right_fork = (ph->id + 1) % input.n;
-	ph->time_to_die = input.time_to_die;
-	ph->time_to_eat = input.time_to_eat;
-	ph->time_to_sleep = input.time_to_sleep;
-	ph->must_eat_n = input.must_eat_n;
-	ph->g = g;
-	if (pthread_create(&ph->threadid, NULL, &ph_thread, (void *)(ph)))
-		return (exit_error("Create thread failed"));
-	return (true);
-}
-
-t_ph	*create_phs(t_input input, t_globals *g)
-{
-	t_ph		*phs;
-	size_t		i;
-
-	phs = malloc(input.n * sizeof(t_ph));
-	i = 0;
-	while (i < input.n)
-	{
-		start_ph(&phs[i], i, input, g);
-		i++;
-	}
-	return (phs);
-}
-
-bool	await_phs(t_ph *phs, size_t n)
-{
-	size_t	i;
-
-	i = 0;
-	while (i < n)
-	{
-		if (pthread_join(phs[i].threadid, NULL))
-			return (exit_error("Thread join failed"));
-		i++;
-	}
-	return (true);
-}
 
 int	main(int argc, const char **argv)
 {
@@ -109,10 +61,12 @@ int	main(int argc, const char **argv)
 		return (1);
 	if (!init_globals(&g, input))
 		return (1);
-	phs = create_phs(input, &g);
+	phs = phs_create(input, &g);
 	if (!phs)
 		return (1);
-	await_phs(phs, input.n);
+	g.phs = phs;
+	phs_start(phs, g.n);
+	phs_await(phs, input.n);
 	free(phs);
 	return (0);
 }

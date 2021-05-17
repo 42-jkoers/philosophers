@@ -7,6 +7,7 @@
 # include <sys/time.h>
 # include <unistd.h>
 # include <stdio.h>
+# include <stdlib.h>
 
 typedef unsigned long	t_time_useconds;
 typedef unsigned long	t_useconds;
@@ -21,15 +22,8 @@ typedef enum e_status
 {
 	FAILURE,
 	SUCCESS,
+	CASUALTY,
 }			t_status;
-
-typedef struct s_globals
-{
-	t_fork			*forks;
-	pthread_mutex_t	forks_lock;
-	pthread_mutex_t	print_lock;
-	size_t			n;
-}		t_globals;
 
 typedef struct s_input
 {
@@ -39,6 +33,15 @@ typedef struct s_input
 	t_useconds		time_to_sleep;
 	long			must_eat_n;
 }		t_input;
+
+typedef struct s_globals
+{
+	t_fork			*forks;
+	pthread_mutex_t	lock;
+	size_t			n;
+	void			*phs;
+	bool			casualty;
+}		t_globals;
 
 typedef struct s_ph
 {
@@ -56,7 +59,26 @@ typedef struct s_ph
 	t_globals		*g;
 }		t_ph;
 
-void			*ph_thread(void *philosoper);
-t_time_useconds	epoch_useconds(void);
+bool	phs_await(t_ph *phs, size_t n);
+t_ph	*phs_create(t_input input, t_globals *g);
+bool	phs_start(t_ph *phs, size_t n);
+
+bool	exit_error(const char *str);
+
+t_time_useconds epoch_useconds(void);
+void	usleep_accurate(t_useconds time);
+
+
+t_useconds	ph_life_expectancy(const t_ph *ph);
+bool	casualty(t_ph *ph);
+
+void	ph_consume_meal(t_ph *ph);
+
+void	ph_print_status(const char *status, const t_ph *ph);
+void	ph_die(t_ph *ph);
+void	ph_delay(t_ph *ph, t_useconds time);
+void	ph_sleep(t_ph *ph);
+void	*ph_thread(void *philosoper);
+
 
 #endif
