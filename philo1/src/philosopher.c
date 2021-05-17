@@ -14,7 +14,7 @@ void	ph_die(t_ph *ph)
 	pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 	{
-		printf("%lu %3lu %s\n", epoch_useconds() / 1000, ph->id + 1, "has died");
+		printf("%lu %3lu has died\n", epoch_useconds() / 1000, ph->id + 1);
 		ph->g->casualty = true;
 	}
 	pthread_mutex_unlock(&ph->g->lock);
@@ -48,9 +48,10 @@ void	ph_sleep(t_ph *ph)
 
 void	*ph_thread(void *philosoper)
 {
-	t_ph		*ph = (t_ph *)philosoper;
-	long		meals;
+	t_ph	*ph;
+	long	meals;
 
+	ph = (t_ph *)philosoper;
 	meals = 0;
 	while (ph->must_eat_n == -1 || meals < ph->must_eat_n)
 	{

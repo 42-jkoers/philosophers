@@ -1,9 +1,9 @@
 #include "philosopher1.h"
 
-static bool can_pickup_forks(t_ph *ph)
+static bool	can_pickup_forks(t_ph *ph)
 {
 	return (ph->g->forks[ph->left_fork] == AVAILABLE
-			&& ph->g->forks[ph->right_fork] == AVAILABLE);
+		&& ph->g->forks[ph->right_fork] == AVAILABLE);
 }
 
 static t_status	attempt_eat(t_ph *ph)

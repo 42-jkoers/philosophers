@@ -45,14 +45,14 @@ bool	phs_await(t_ph *phs, size_t n)
 	return (true);
 }
 
-bool phs_start(t_ph *phs, size_t n)
+bool	phs_start(t_ph *phs, size_t n)
 {
 	size_t	i;
 
 	i = 0;
 	while (i < n)
 	{
-		if (pthread_create(&phs[i].threadid, NULL, &ph_thread, (void *)(&phs[i])))
+		if (pthread_create(&phs[i].threadid, 0, &ph_thread, (void *)(&phs[i])))
 			return (exit_error("Thread join failed"));
 		i++;
 	}

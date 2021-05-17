@@ -1,4 +1,3 @@
-
 #include "philosopher1.h"
 
 t_useconds	ph_life_expectancy(const t_ph *ph)
