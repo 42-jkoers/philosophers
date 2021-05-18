@@ -22,6 +22,8 @@ t_ph	*phs_create(t_input input, t_globals *g)
 	size_t		i;
 
 	phs = malloc(input.n * sizeof(t_ph));
+	if (!phs)
+		return (NULL);
 	i = 0;
 	while (i < input.n)
 	{

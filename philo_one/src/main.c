@@ -38,6 +38,8 @@ bool	init_globals(t_globals *g, t_input input)
 	size_t	i;
 
 	g->forks = malloc(input.n * sizeof(t_fork));
+	if (!g->forks)
+		return (false);
 	i = 0;
 	while (i < input.n)
 	{
@@ -45,10 +47,22 @@ bool	init_globals(t_globals *g, t_input input)
 		i++;
 	}
 	if (pthread_mutex_init(&g->lock, NULL))
+	{
+		free(g->forks);
 		return (exit_error("Create mutex lock failed"));
+	}
 	g->n = input.n;
 	g->casualty = false;
 	return (true);
+}
+
+int	main_exit(int code, t_globals *g, t_ph *phs)
+{
+	if (g)
+		free(g->forks);
+	if (phs)
+		free(phs);
+	return (code);
 }
 
 int	main(int argc, const char **argv)
@@ -60,13 +74,14 @@ int	main(int argc, const char **argv)
 	if (!parse_input(&input, argc, argv))
 		return (1);
 	if (!init_globals(&g, input))
-		return (1);
+		return (main_exit(1, NULL, NULL));
 	phs = phs_create(input, &g);
 	if (!phs)
-		return (1);
+		return (main_exit(1, &g, NULL));
 	g.phs = phs;
-	phs_start(phs, g.n);
-	phs_await(phs, input.n);
-	free(phs);
-	return (0);
+	if (!phs_start(phs, g.n))
+		return (main_exit(1, &g, phs));
+	if (!phs_await(phs, input.n))
+		return (main_exit(1, &g, phs));
+	return (main_exit(0, &g, phs));
 }
