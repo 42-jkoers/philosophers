@@ -59,10 +59,7 @@ bool	init_globals(t_globals *g, t_input input)
 int	main_exit(int code, t_globals *g, t_ph *phs)
 {
 	if (g)
-	{
-		pthread_mutex_destroy(&g->lock);
 		free(g->forks);
-	}
 	if (phs)
 		free(phs);
 	return (code);
