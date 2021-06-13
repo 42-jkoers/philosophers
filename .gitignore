@@ -1,2 +1,4 @@
-*subject.pdf
+*.pdf
 obj/
+.DS_Store
+/.vscode/
