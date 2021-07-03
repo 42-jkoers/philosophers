@@ -9,6 +9,7 @@ void	ph_print_status(const char *status, const t_ph *ph)
 	pthread_mutex_unlock(&ph->g->lock);
 }
 
+// Only print that the current ph has died their the first one
 void	ph_die(t_ph *ph)
 {
 	pthread_mutex_lock(&ph->g->lock);
@@ -22,18 +23,17 @@ void	ph_die(t_ph *ph)
 
 void	ph_delay(t_ph *ph, t_useconds time)
 {
-	const t_useconds	interval = 7000;
 	const t_useconds	life_expectancy = ph_life_expectancy(ph);
 	const bool			will_die = life_expectancy <= time;
 
 	if (life_expectancy < time)
 		time = life_expectancy;
-	while (time > interval)
+	while (time > CHECK_PH_DIED_INTERVAL)
 	{
-		usleep_accurate(interval);
 		if (casualty(ph))
 			return ;
-		time -= interval;
+		usleep_accurate(CHECK_PH_DIED_INTERVAL);
+		time -= CHECK_PH_DIED_INTERVAL;
 	}
 	usleep_accurate(time);
 	if (will_die)

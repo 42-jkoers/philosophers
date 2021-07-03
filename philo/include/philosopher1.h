@@ -9,6 +9,11 @@
 # include <stdio.h>
 # include <stdlib.h>
 
+// check every n us if ph has died, if the simulation should stop max 10000 us
+// after a ph dies, use a lower number like 7000. Depends on the processor speed
+// slower processor speed is lower interval
+# define CHECK_PH_DIED_INTERVAL 7000
+
 typedef unsigned long	t_time_useconds;
 typedef unsigned long	t_useconds;
 
@@ -36,7 +41,8 @@ typedef struct s_input
 
 typedef struct s_globals
 {
-	t_fork			*forks;
+	pthread_mutex_t	*forks;
+	t_fork			*forks_in_use;
 	pthread_mutex_t	lock;
 	size_t			n;
 	void			*phs;
@@ -49,6 +55,7 @@ typedef struct s_ph
 	pthread_t		threadid;
 	t_time_useconds	last_meal;
 
+	pthread_mutex_t	*lock;
 	size_t			left_fork;
 	size_t			right_fork;
 	t_useconds		time_to_die;
@@ -59,26 +66,25 @@ typedef struct s_ph
 	t_globals		*g;
 }		t_ph;
 
-bool	phs_await(t_ph *phs, size_t n);
-t_ph	*phs_create(t_input input, t_globals *g);
-bool	phs_start(t_ph *phs, size_t n);
+bool			phs_await(t_ph *phs, size_t n);
+t_ph			*phs_create(t_input input, t_globals *g);
+bool			phs_start(t_ph *phs, size_t n);
 
-bool	exit_error(const char *str);
+bool			exit_error(const char *str);
 
-t_time_useconds epoch_useconds(void);
-void	usleep_accurate(t_useconds time);
+t_time_useconds	epoch_useconds(void);
+void			usleep_accurate(t_useconds time);
 
+t_useconds		ph_life_expectancy(const t_ph *ph);
+bool			casualty(t_ph *ph);
 
-t_useconds	ph_life_expectancy(const t_ph *ph);
-bool	casualty(t_ph *ph);
+t_status		ph_consume_meal(t_ph *ph);
 
-void	ph_consume_meal(t_ph *ph);
-
-void	ph_print_status(const char *status, const t_ph *ph);
-void	ph_die(t_ph *ph);
-void	ph_delay(t_ph *ph, t_useconds time);
-void	ph_sleep(t_ph *ph);
-void	*ph_thread(void *philosoper);
-
+void			ph_print_status(const char *status, const t_ph *ph);
+void			ph_die(t_ph *ph);
+void			ph_delay(t_ph *ph, t_useconds time);
+void			ph_sleep(t_ph *ph);
+void			*ph_thread(void *philosoper);
+bool			parse_input(t_input *input, int argc, const char **argv);
 
 #endif

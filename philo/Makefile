@@ -1,5 +1,5 @@
 
-NAME      		= philo1
+NAME      		= philo
 
 CC          	= gcc
 CFLAGS      	= -Wall -Wextra -Wuninitialized -O3
@@ -15,7 +15,7 @@ LIBS			= ../lib/not_libft/bin/not_libft.a
 INCLUDES		= -I$(HEADERDIR) -I../lib/
 LINK			= -lpthread
 
-HEADERS			= $(shell find $(HEADERDIR) -type f -name '*.h')
+OBJ_IN_DIR 		= $(BUILDDIR)/*.$(OBJEXT)
 
 include sources.mk
 
@@ -25,15 +25,15 @@ VPATH = $(shell find $(SRCDIR) -type d | tr '\n' ':' | sed -E 's/(.*):/\1/')
 .SUFFIXES:
 SILECE_MAKE = | grep -v -E ".*Leaving directory|.*Entering directory"
 
-all: $(NAME)
+all: ./$(NAME)
 
-$(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERS) $(SETTINGS)
+$(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERDIR) $(SETTINGS)
 	$(MAKE) -C ../lib/not_libft $(SILECE_MAKE)
-	$(CC) $(CFLAGS) $(INCLUDES) $(BUILDDIR)/*.$(OBJEXT) $(LIBS) -o $(NAME) $(LINK)
+	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_IN_DIR) $(LIBS) -o $(NAME) $(LINK)
 
 # sources
 
-$(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERS) $(SETTINGS)
+$(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERDIR) $(SETTINGS)
 	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@) $(LINK)
 
 clean:
@@ -59,5 +59,27 @@ findsources:
 
 silent:
 	@$(MAKE) > /dev/null
+
+eval1:
+	@echo "THE PHILOSOPHER SHOULD NOT EAT AND SHOULD DIE"
+	./$(NAME) 1 800 200 200
+
+eval2:
+	@echo "NO ONE SHOULD DIE"
+	./$(NAME) 5 800 200 200
+
+eval3:
+	@echo "NO ONE SHOULD DIE AND THE SIMULATION SHOULD STOP WHEN ALL THE \
+PHILOSOPHER HAS EATEN AT LEAST 7 TIMES EACH"
+	./$(NAME) 5 800 200 200 7 | grep eating | wc -l
+
+eval4:
+	@echo "NO ONE SHOULD DIE"
+	./$(NAME) 4 410 200 200
+
+eval5:
+	@echo "A PHILOSOPHER SHOULD DIE"
+	./$(NAME) 4 310 200 100
+
 
 .PHONY: all clean fclean re findsources silent
