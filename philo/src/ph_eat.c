@@ -22,6 +22,7 @@ static t_status	stop_eating(t_ph *ph)
 {
 	t_status	status;
 
+	status = SUCCESS;
 	ph->g->forks_in_use[ph->left_fork] = AVAILABLE;
 	ph->g->forks_in_use[ph->right_fork] = AVAILABLE;
 	if (ph->g->casualty)

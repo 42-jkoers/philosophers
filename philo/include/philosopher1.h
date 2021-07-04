@@ -12,7 +12,7 @@
 // check every n us if ph has died, if the simulation should stop max 10000 us
 // after a ph dies, use a lower number like 7000. Depends on the processor speed
 // slower processor speed is lower interval
-# define CHECK_PH_DIED_INTERVAL 7000
+# define CHECK_PH_DIED_INTERVAL 9000
 
 typedef unsigned long	t_time_useconds;
 typedef unsigned long	t_useconds;
@@ -76,7 +76,6 @@ t_time_useconds	epoch_useconds(void);
 void			usleep_accurate(t_useconds time);
 
 t_useconds		ph_life_expectancy(const t_ph *ph);
-bool			casualty(t_ph *ph);
 
 t_status		ph_consume_meal(t_ph *ph);
 

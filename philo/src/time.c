@@ -1,4 +1,5 @@
 #include "philosopher1.h"
+#include "../lib/not_libft/include/not_libft.h"
 
 t_time_useconds	epoch_useconds(void)
 {
@@ -10,8 +11,14 @@ t_time_useconds	epoch_useconds(void)
 
 void	usleep_accurate(t_useconds time)
 {
-	const t_useconds	entry = epoch_useconds();
+	const t_useconds	stop_at = epoch_useconds() + time;
+	t_useconds			now;
 
-	while ((epoch_useconds() - entry) < time)
-		usleep(200);
+	while (true)
+	{
+		now = epoch_useconds();
+		if (now >= stop_at)
+			return ;
+		usleep(ft_minu(stop_at - now, 400));
+	}
 }

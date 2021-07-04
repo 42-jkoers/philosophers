@@ -24,27 +24,32 @@ void	ph_die(t_ph *ph)
 void	ph_delay(t_ph *ph, t_useconds time)
 {
 	const t_useconds	life_expectancy = ph_life_expectancy(ph);
-	const bool			will_die = life_expectancy <= time;
+	const t_useconds	stop_at = epoch_useconds() + time;
+	t_useconds			now;
 
+	if (ph->g->casualty)
+		return ;
 	if (life_expectancy < time)
-		time = life_expectancy;
-	while (time > CHECK_PH_DIED_INTERVAL)
 	{
-		if (casualty(ph))
-			return ;
-		usleep_accurate(CHECK_PH_DIED_INTERVAL);
-		time -= CHECK_PH_DIED_INTERVAL;
+		usleep_accurate(life_expectancy);
+		ph_die(ph);
+		return ;
 	}
-	usleep_accurate(time);
-	if (will_die)
-		return (ph_die(ph));
+	while (true)
+	{
+		now = epoch_useconds();
+		if (now >= stop_at)
+			return ;
+		if (stop_at - now < CHECK_PH_DIED_INTERVAL)
+		{
+			usleep_accurate(stop_at - now);
+			return ;
+		}
+		else
+			usleep(CHECK_PH_DIED_INTERVAL);
+	}
 }
 
-void	ph_sleep(t_ph *ph)
-{
-	ph_print_status("is sleeping", ph);
-	ph_delay(ph, ph->time_to_sleep);
-}
 
 void	*ph_thread(void *philosoper)
 {
@@ -55,11 +60,11 @@ void	*ph_thread(void *philosoper)
 	meals = 0;
 	while (ph->must_eat_n == -1 || meals < ph->must_eat_n)
 	{
-		ph_consume_meal(ph);
-		ph_sleep(ph);
-		ph_print_status("is thinking", ph);
-		if (casualty(ph))
+		if (ph_consume_meal(ph) == CASUALTY)
 			return (NULL);
+		ph_print_status("is sleeping", ph);
+		ph_delay(ph, ph->time_to_sleep);
+		ph_print_status("is thinking", ph);
 		meals++;
 	}
 	return (NULL);
