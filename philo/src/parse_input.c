@@ -12,13 +12,13 @@ bool	parse_input(t_input *input, int argc, const char **argv)
 {
 	if (argc != 5 && argc != 6)
 		return (exit_error("Err: args\n"));
-	if (!ft_strtoul_clamp(&input->n, argv[1], 0, ULONG_MAX * 0.001))
+	if (!ft_strtoul_clamp(&input->n, argv[1], 0, ULONG_MAX / 1000))
 		return (exit_error("Invalid number of phs\n"));
-	if (!ft_strtoul_clamp(&input->time_to_die, argv[2], 0, ULONG_MAX * 0.001))
+	if (!ft_strtoul_clamp(&input->time_to_die, argv[2], 0, ULONG_MAX / 1000))
 		return (exit_error("Invalid time to die\n"));
-	if (!ft_strtoul_clamp(&input->time_to_eat, argv[3], 0, ULONG_MAX * 0.001))
+	if (!ft_strtoul_clamp(&input->time_to_eat, argv[3], 0, ULONG_MAX / 1000))
 		return (exit_error("Invalid time to eat\n"));
-	if (!ft_strtoul_clamp(&input->time_to_sleep, argv[4], 0, ULONG_MAX * 0.001))
+	if (!ft_strtoul_clamp(&input->time_to_sleep, argv[4], 0, ULONG_MAX / 1000))
 		return (exit_error("Invalid time to sleep\n"));
 	if (argc == 6)
 	{

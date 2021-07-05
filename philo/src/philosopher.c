@@ -1,11 +1,19 @@
 #include "philosopher1.h"
 #include <sys/time.h>
+#include "../lib/not_libft/include/not_libft.h"
+
+unsigned long	since_start_ms(const t_ph *ph)
+{
+	const t_useconds	time = epoch_useconds() - ph->g->start_program;
+
+	return ((time + 500) / 1000);
+}
 
 void	ph_print_status(const char *status, const t_ph *ph)
 {
 	pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
-		printf("%lu %3lu %s\n", epoch_useconds() / 1000, ph->id + 1, status);
+		printf("%5lu %3lu %s\n", since_start_ms(ph), ph->id + 1, status);
 	pthread_mutex_unlock(&ph->g->lock);
 }
 
@@ -15,7 +23,7 @@ void	ph_die(t_ph *ph)
 	pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 	{
-		printf("%lu %3lu has died\n", epoch_useconds() / 1000, ph->id + 1);
+		printf("%5lu %3lu has died\n", since_start_ms(ph), ph->id + 1);
 		ph->g->casualty = true;
 	}
 	pthread_mutex_unlock(&ph->g->lock);
@@ -24,32 +32,30 @@ void	ph_die(t_ph *ph)
 void	ph_delay(t_ph *ph, t_useconds time)
 {
 	const t_useconds	life_expectancy = ph_life_expectancy(ph);
-	const t_useconds	stop_at = epoch_useconds() + time;
+	const t_useconds	stop_at =
+							epoch_useconds() + ft_minu(time, life_expectancy);
 	t_useconds			now;
 
 	if (ph->g->casualty)
 		return ;
-	if (life_expectancy < time)
-	{
-		usleep_accurate(life_expectancy);
-		ph_die(ph);
-		return ;
-	}
 	while (true)
 	{
+		if (ph->g->casualty)
+			return ;
 		now = epoch_useconds();
 		if (now >= stop_at)
 			return ;
 		if (stop_at - now < CHECK_PH_DIED_INTERVAL)
 		{
 			usleep_accurate(stop_at - now);
-			return ;
+			break ;
 		}
 		else
 			usleep(CHECK_PH_DIED_INTERVAL);
 	}
+	if (time >= life_expectancy)
+		ph_die(ph);
 }
-
 
 void	*ph_thread(void *philosoper)
 {

@@ -66,6 +66,7 @@ eval1:
 
 eval2:
 	@echo "NO ONE SHOULD DIE"
+	sleep 2
 	./$(NAME) 5 800 200 200
 
 eval3:

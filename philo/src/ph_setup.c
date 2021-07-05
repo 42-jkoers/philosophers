@@ -3,7 +3,7 @@
 static void	create_ph(t_ph *ph, size_t id, t_input input, t_globals *g)
 {
 	ph->id = id;
-	ph->last_meal = epoch_useconds();
+	ph->last_meal = g->start_program;
 	if (ph->id == 0)
 		ph->left_fork = input.n - 1;
 	else

@@ -37,6 +37,7 @@ bool	init_globals(t_globals *g, t_input input)
 		return (init_globals_destructor(g));
 	g->n = input.n;
 	g->casualty = false;
+	g->start_program = epoch_useconds();
 	return (true);
 }
 

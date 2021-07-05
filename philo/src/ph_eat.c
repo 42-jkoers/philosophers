@@ -54,8 +54,17 @@ t_status	ph_consume_meal(t_ph *ph)
 {
 	t_status	status;
 
-	status = FAILURE;
-	while (status == FAILURE)
+	while (true)
+	{
 		status = attempt_eat(ph);
+		if (status != FAILURE)
+			return (status);
+		if (!ph_life_expectancy(ph))
+		{
+			ph_die(ph);
+			return (CASUALTY);
+		}
+		usleep(10);
+	}
 	return (status);
 }

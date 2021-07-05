@@ -46,6 +46,7 @@ typedef struct s_globals
 	pthread_mutex_t	lock;
 	size_t			n;
 	void			*phs;
+	t_time_useconds	start_program;
 	bool			casualty;
 }		t_globals;
 
