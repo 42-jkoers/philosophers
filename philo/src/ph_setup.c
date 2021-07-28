@@ -4,15 +4,19 @@ static void	create_ph(t_ph *ph, size_t id, t_input input, t_globals *g)
 {
 	ph->id = id;
 	ph->last_meal = g->start_program;
-	if (ph->id == 0)
-		ph->left_fork = input.n - 1;
-	else
+	if (ph->id != 0 && input.n != 2)
 		ph->left_fork = ph->id - 1;
-	ph->right_fork = (ph->id + 1) % input.n;
+	else
+		ph->left_fork = input.n - 1;
+	if (ph->id + 1 != g->n && input.n != 2)
+		ph->right_fork = ph->id + 1;
+	else
+		ph->right_fork = 0;
 	ph->time_to_die = input.time_to_die;
 	ph->time_to_eat = input.time_to_eat;
 	ph->time_to_sleep = input.time_to_sleep;
 	ph->must_eat_n = input.must_eat_n;
+	printf("%lu %lu %lu\n", ph->left_fork, ph->id, ph->right_fork);
 	ph->g = g;
 }
 

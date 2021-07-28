@@ -70,10 +70,10 @@ int	main(int argc, const char **argv)
 
 	if (!parse_input(&input, argc, argv))
 		return (1);
-	if (input.n <= 2)
+	if (input.n < 2)
 	{
 		usleep_accurate(input.time_to_die);
-		printf("%lu 1 has died\n", epoch_useconds() / 1000);
+		printf("%lu 1 has died\n", input.time_to_die / 1000);
 		return (0);
 	}
 	if (!init_globals(&g, input))

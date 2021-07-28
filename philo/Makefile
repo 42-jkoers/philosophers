@@ -34,7 +34,7 @@ $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERDIR) $(SETTINGS)
 # sources
 
 $(BUILDDIR)/%.$(OBJEXT): %.$(SRCEXT) $(HEADERDIR) $(SETTINGS)
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@) $(LINK)
+	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $(BUILDDIR)/$(notdir $@)
 
 clean:
 ifneq ($(BUILDDIR),.)
@@ -60,25 +60,25 @@ findsources:
 silent:
 	@$(MAKE) > /dev/null
 
-eval1:
+eval1: silent
 	@echo "THE PHILOSOPHER SHOULD NOT EAT AND SHOULD DIE"
 	./$(NAME) 1 800 200 200
 
-eval2:
+eval2: silent
 	@echo "NO ONE SHOULD DIE"
-	sleep 2
+	# sleep 2
 	./$(NAME) 5 800 200 200
 
-eval3:
+eval3: silent
 	@echo "NO ONE SHOULD DIE AND THE SIMULATION SHOULD STOP WHEN ALL THE \
 PHILOSOPHER HAS EATEN AT LEAST 7 TIMES EACH"
 	./$(NAME) 5 800 200 200 7 | grep eating | wc -l
 
-eval4:
+eval4: silent
 	@echo "NO ONE SHOULD DIE"
 	./$(NAME) 4 410 200 200
 
-eval5:
+eval5: silent
 	@echo "A PHILOSOPHER SHOULD DIE"
 	./$(NAME) 4 310 200 100
 

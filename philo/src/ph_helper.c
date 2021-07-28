@@ -1,12 +1,9 @@
 #include "philosopher1.h"
+#include "../lib/not_libft/include/not_libft.h"
 
-t_useconds	ph_life_expectancy(const t_ph *ph)
+t_useconds	time_until_ded(const t_ph *ph)
 {
-	t_useconds	since_last_meal;
+	const t_useconds	since_last_meal = epoch_useconds() - ph->last_meal;
 
-	since_last_meal = epoch_useconds() - ph->last_meal;
-	if (since_last_meal > ph->time_to_die)
-		return (0);
-	else
-		return (ph->time_to_die - since_last_meal);
+	return (ph->time_to_die - ft_minu(ph->time_to_die, since_last_meal));
 }

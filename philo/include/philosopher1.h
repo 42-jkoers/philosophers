@@ -56,7 +56,6 @@ typedef struct s_ph
 	pthread_t		threadid;
 	t_time_useconds	last_meal;
 
-	pthread_mutex_t	*lock;
 	size_t			left_fork;
 	size_t			right_fork;
 	t_useconds		time_to_die;
@@ -76,7 +75,7 @@ bool			exit_error(const char *str);
 t_time_useconds	epoch_useconds(void);
 void			usleep_accurate(t_useconds time);
 
-t_useconds		ph_life_expectancy(const t_ph *ph);
+t_useconds		time_until_ded(const t_ph *ph);
 
 t_status		ph_consume_meal(t_ph *ph);
 
@@ -86,5 +85,6 @@ void			ph_delay(t_ph *ph, t_useconds time);
 void			ph_sleep(t_ph *ph);
 void			*ph_thread(void *philosoper);
 bool			parse_input(t_input *input, int argc, const char **argv);
+unsigned long	since_start_ms(const t_ph *ph);
 
 #endif

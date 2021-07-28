@@ -11,10 +11,10 @@ unsigned long	since_start_ms(const t_ph *ph)
 
 void	ph_print_status(const char *status, const t_ph *ph)
 {
-	pthread_mutex_lock(&ph->g->lock);
+	// pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 		printf("%5lu %3lu %s\n", since_start_ms(ph), ph->id + 1, status);
-	pthread_mutex_unlock(&ph->g->lock);
+	// pthread_mutex_unlock(&ph->g->lock);
 }
 
 // Only print that the current ph has died their the first one
@@ -31,13 +31,11 @@ void	ph_die(t_ph *ph)
 
 void	ph_delay(t_ph *ph, t_useconds time)
 {
-	const t_useconds	life_expectancy = ph_life_expectancy(ph);
+	const t_useconds	life_expectancy = time_until_ded(ph);
 	const t_useconds	stop_at =
 							epoch_useconds() + ft_minu(time, life_expectancy);
 	t_useconds			now;
 
-	if (ph->g->casualty)
-		return ;
 	while (true)
 	{
 		if (ph->g->casualty)
@@ -73,5 +71,6 @@ void	*ph_thread(void *philosoper)
 		ph_print_status("is thinking", ph);
 		meals++;
 	}
+	printf("%lu done\n", ph->id);
 	return (NULL);
 }
