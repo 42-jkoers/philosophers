@@ -11,10 +11,8 @@ unsigned long	since_start_ms(const t_ph *ph)
 
 void	ph_print_status(const char *status, const t_ph *ph)
 {
-	// pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 		printf("%5lu %3lu %s\n", since_start_ms(ph), ph->id + 1, status);
-	// pthread_mutex_unlock(&ph->g->lock);
 }
 
 // Only print that the current ph has died their the first one

@@ -54,7 +54,7 @@ t_status	ph_consume_meal(t_ph *ph)
 {
 	t_status	status;
 	double		search_delay;
-	// ph_print_status("tries to eat", ph);
+
 	search_delay = 200;
 	while (true)
 	{
