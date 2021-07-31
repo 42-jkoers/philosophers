@@ -4,40 +4,59 @@
 #include <stdlib.h>
 #include <limits.h>
 
+bool	init_globals_destructor(t_globals *g)
+{
+	if (!g)
+		return (false);
+	if (g->forks)
+		free (g->forks);
+	if (g->forks_in_use)
+		free(g->forks_in_use);
+	return (false);
+}
+
 bool	init_globals(t_globals *g, t_input input)
 {
 	size_t	i;
 
+	ft_bzero(g, sizeof(t_globals));
 	g->forks = malloc(input.n * sizeof(pthread_mutex_t));
 	if (!g->forks)
-		return (false);
+		return (init_globals_destructor(g));
 	g->forks_in_use = malloc(input.n * sizeof(t_fork));
 	if (!g->forks_in_use)
-		return (false);
+		return (init_globals_destructor(g));
 	i = 0;
 	while (i < input.n)
 	{
-		pthread_mutex_init(&g->forks[i], NULL);
 		g->forks_in_use[i] = AVAILABLE;
+		if (pthread_mutex_init(&g->forks[i], NULL))
+			return (init_globals_destructor(g));
 		i++;
 	}
 	if (pthread_mutex_init(&g->lock, NULL))
-	{
-		free(g->forks);
-		return (exit_error("Create mutex lock failed"));
-	}
+		return (init_globals_destructor(g));
 	g->n = input.n;
-	g->start_program = epoch_useconds();
 	g->casualty = false;
+	g->start_program = epoch_useconds();
 	return (true);
 }
 
-int	main_exit(int code, t_globals *g, t_ph *phs)
+int	main_destructor(int code, t_globals *g, t_ph *phs)
 {
+	size_t	i;
+
 	if (g)
 	{
+		i = 0;
+		while (i < g->n)
+		{
+			pthread_mutex_destroy(&g->forks[i]);
+			i++;
+		}
 		pthread_mutex_destroy(&g->lock);
 		free(g->forks);
+		free(g->forks_in_use);
 	}
 	if (phs)
 		free(phs);
@@ -59,14 +78,14 @@ int	main(int argc, const char **argv)
 		return (0);
 	}
 	if (!init_globals(&g, input))
-		return (main_exit(1, NULL, NULL));
+		return (1);
 	phs = phs_create(input, &g);
 	if (!phs)
-		return (main_exit(1, &g, NULL));
+		return (main_destructor(1, &g, NULL));
 	g.phs = phs;
 	if (!phs_start(phs, g.n))
-		return (main_exit(1, &g, phs));
+		return (main_destructor(1, &g, phs));
 	if (!phs_await(phs, input.n))
-		return (main_exit(1, &g, phs));
-	return (main_exit(0, &g, phs));
+		return (main_destructor(1, &g, phs));
+	return (main_destructor(0, &g, phs));
 }
