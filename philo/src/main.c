@@ -71,7 +71,9 @@ int	main(int argc, const char **argv)
 
 	if (!parse_input(&input, argc, argv))
 		return (1);
-	if (input.n <= 1)
+	if (input.n == 0 || input.must_eat_n == 0)
+		return (1);
+	if (input.n == 1)
 	{
 		usleep_accurate(input.time_to_die);
 		printf("%lu 1 has died\n", input.time_to_die / 1000);
