@@ -56,6 +56,7 @@ t_status	ph_consume_meal(t_ph *ph)
 	double		search_delay;
 
 	search_delay = 200;
+	usleep(300);
 	while (true)
 	{
 		status = attempt_eat(ph);
