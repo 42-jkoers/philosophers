@@ -19,7 +19,7 @@ void	ph_print_status(const char *status, const t_ph *ph)
 void	ph_die(t_ph *ph)
 {
 	if (stay_alive(ph))
-		return
+		return ;
 	pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 	{
