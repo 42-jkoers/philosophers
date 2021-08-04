@@ -1,5 +1,5 @@
 #include "philosopher1.h"
-#include "../lib/not_libft/include/not_libft.h"
+#include "not_libft/include/not_libft.h"
 
 t_time_useconds	epoch_useconds(void)
 {

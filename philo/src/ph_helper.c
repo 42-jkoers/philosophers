@@ -1,5 +1,5 @@
 #include "philosopher1.h"
-#include "../lib/not_libft/include/not_libft.h"
+#include "not_libft/include/not_libft.h"
 
 t_useconds	time_until_ded(const t_ph *ph)
 {

@@ -1,6 +1,6 @@
 #include "philosopher1.h"
 #include <sys/time.h>
-#include "../lib/not_libft/include/not_libft.h"
+#include "not_libft/include/not_libft.h"
 
 unsigned long	since_start_ms(const t_ph *ph)
 {
@@ -19,7 +19,7 @@ void	ph_print_status(const char *status, const t_ph *ph)
 void	ph_die(t_ph *ph)
 {
 	if (stay_alive(ph))
-		return ;
+		return
 	pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 	{

@@ -11,8 +11,8 @@ HEADERDIR		= include
 OBJEXT      	= o
 BUILDDIR    	= obj
 
-LIBS			= ../lib/not_libft/bin/not_libft.a
-INCLUDES		= -I$(HEADERDIR) -I../lib/
+LIBS			= lib/not_libft/bin/not_libft.a
+INCLUDES		= -I$(HEADERDIR) -Ilib/
 LINK			= -lpthread
 
 OBJ_IN_DIR 		= $(BUILDDIR)/*.$(OBJEXT)
@@ -28,7 +28,7 @@ SILECE_MAKE = | grep -v -E ".*Leaving directory|.*Entering directory"
 all: ./$(NAME)
 
 $(NAME): $(BUILDDIR)/ $(OBJ) $(HEADERDIR) $(SETTINGS)
-	$(MAKE) -C ../lib/not_libft $(SILECE_MAKE)
+	$(MAKE) -C lib/not_libft $(SILECE_MAKE)
 	$(CC) $(CFLAGS) $(INCLUDES) $(OBJ_IN_DIR) $(LIBS) -o $(NAME) $(LINK)
 
 # sources
