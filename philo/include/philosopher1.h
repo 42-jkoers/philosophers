@@ -17,11 +17,7 @@
 typedef unsigned long	t_time_useconds;
 typedef unsigned long	t_useconds;
 
-typedef enum e_fork
-{
-	AVAILABLE,
-	IN_USE,
-}			t_fork;
+typedef long			t_fork;
 
 typedef enum e_status
 {
@@ -41,8 +37,8 @@ typedef struct s_input
 
 typedef struct s_globals
 {
-	pthread_mutex_t	*forks;
-	t_fork			*forks_in_use;
+	pthread_mutex_t	*locks;
+	t_fork			*forks;
 	pthread_mutex_t	lock;
 	size_t			n;
 	void			*phs;
@@ -52,7 +48,7 @@ typedef struct s_globals
 
 typedef struct s_ph
 {
-	size_t			id;
+	long			id;
 	pthread_t		threadid;
 	t_time_useconds	last_meal;
 
@@ -86,5 +82,6 @@ void			ph_sleep(t_ph *ph);
 void			*ph_thread(void *philosoper);
 bool			parse_input(t_input *input, int argc, const char **argv);
 unsigned long	since_start_ms(const t_ph *ph);
+bool			stay_alive(const t_ph *ph);
 
 #endif

@@ -18,6 +18,8 @@ void	ph_print_status(const char *status, const t_ph *ph)
 // Only print that the current ph has died their the first one
 void	ph_die(t_ph *ph)
 {
+	if (stay_alive(ph))
+		return ;
 	pthread_mutex_lock(&ph->g->lock);
 	if (!ph->g->casualty)
 	{

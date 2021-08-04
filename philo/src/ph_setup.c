@@ -8,7 +8,7 @@ static void	create_ph(t_ph *ph, size_t id, t_input input, t_globals *g)
 		ph->left_fork = ph->id - 1;
 	else
 		ph->left_fork = input.n - 1;
-	if (ph->id + 1 != g->n && input.n != 2)
+	if (ph->id + 1 != (long)g->n && input.n != 2)
 		ph->right_fork = ph->id + 1;
 	else
 		ph->right_fork = 0;

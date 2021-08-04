@@ -8,10 +8,10 @@ bool	init_globals_destructor(t_globals *g)
 {
 	if (!g)
 		return (false);
+	if (g->locks)
+		free (g->locks);
 	if (g->forks)
-		free (g->forks);
-	if (g->forks_in_use)
-		free(g->forks_in_use);
+		free(g->forks);
 	return (false);
 }
 
@@ -20,17 +20,17 @@ bool	init_globals(t_globals *g, t_input input)
 	size_t	i;
 
 	ft_bzero(g, sizeof(t_globals));
-	g->forks = malloc(input.n * sizeof(pthread_mutex_t));
-	if (!g->forks)
+	g->locks = malloc(input.n * sizeof(pthread_mutex_t));
+	if (!g->locks)
 		return (init_globals_destructor(g));
-	g->forks_in_use = malloc(input.n * sizeof(t_fork));
-	if (!g->forks_in_use)
+	g->forks = malloc(input.n * sizeof(t_fork));
+	if (!g->forks)
 		return (init_globals_destructor(g));
 	i = 0;
 	while (i < input.n)
 	{
-		g->forks_in_use[i] = AVAILABLE;
-		if (pthread_mutex_init(&g->forks[i], NULL))
+		g->forks[i] = -9999999;
+		if (pthread_mutex_init(&g->locks[i], NULL))
 			return (init_globals_destructor(g));
 		i++;
 	}
@@ -51,12 +51,12 @@ int	main_destructor(int code, t_globals *g, t_ph *phs)
 		i = 0;
 		while (i < g->n)
 		{
-			pthread_mutex_destroy(&g->forks[i]);
+			pthread_mutex_destroy(&g->locks[i]);
 			i++;
 		}
 		pthread_mutex_destroy(&g->lock);
+		free(g->locks);
 		free(g->forks);
-		free(g->forks_in_use);
 	}
 	if (phs)
 		free(phs);
