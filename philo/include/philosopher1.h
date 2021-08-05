@@ -82,6 +82,6 @@ void			ph_sleep(t_ph *ph);
 void			*ph_thread(void *philosoper);
 bool			parse_input(t_input *input, int argc, const char **argv);
 unsigned long	since_start_ms(const t_ph *ph);
-bool			stay_alive(const t_ph *ph);
+bool			adjust_timing(const t_ph *ph);
 
 #endif
